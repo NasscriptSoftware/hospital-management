@@ -6,13 +6,13 @@ const Layout = ({ children }) => {
   return (
     <div className="flex">
       {/* Sidebar */}
-      <div className="fixed inset-y-0 left-0 w-64">
+      <div className="fixed inset-y-0 left-0 z-10">
         <Sidebar />
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 pl-[1rem]"> {/* padding-left matches sidebar width */}
-        <div className="p-8 min-h-screen bg-gray-50">
+      <div className="flex-1 ml-16"> {/* Add margin-left instead of padding */}
+        <div className=" min-h-screen bg-gray-50">
           {children}
         </div>
       </div>

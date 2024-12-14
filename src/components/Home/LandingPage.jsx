@@ -1,3 +1,4 @@
+import  { useState, useEffect } from 'react';
 import {
   BarChart,
   Bar,
@@ -16,17 +17,17 @@ import {
 } from "recharts";
 
 const LandingPage = () => {
-  const employeeData = [
+  const hospitalData = [
     { name: "Hospital A", employees: 150 },
     { name: "Hospital B", employees: 200 },
     { name: "Hospital C", employees: 180 },
     { name: "Hospital D", employees: 120 },
   ];
 
-  const statusData = [
-    { name: "Active", value: 540, color: "#10B981" },
-    { name: "Inactive", value: 210, color: "#EF4444" },
-    { name: "Interested", value: 320, color: "#6366F1" },
+  const employeeStatusData = [
+    { name: "Active", value: 540, color: "#9333EA" },
+    { name: "Inactive", value: 210, color: "#A855F7" },
+    { name: "Interested", value: 320, color: "#7C3AED" }
   ];
 
   const activeEmployeesData = [
@@ -47,162 +48,195 @@ const LandingPage = () => {
     { month: "Jun", count: 210 }, // Current inactive
   ];
 
-  // Color theme matching sidebar
-  const theme = {
-    primary: "#1E40AF", // Dark blue
-    secondary: "#6366F1", // Indigo
-    accent: "#10B981", // Emerald
-    background: "#F3F4F6", // Light gray
-    text: "#1F2937", // Dark gray
-  };
 
-  // Add responsive chart dimensions
-  const getChartDimensions = () => {
-    const width = window.innerWidth;
-    return {
-      full: width < 768 ? width - 40 : 500,
-      small: width < 768 ? width - 40 : 350,
-      height: width < 768 ? 250 : 300
+
+  // Add state for dimensions
+  const [dimensions, setDimensions] = useState({
+    width: 300,
+    height: 300
+  });
+
+  // Update dimensions on mount and window resize
+  useEffect(() => {
+    const updateDimensions = () => {
+      const width = window.innerWidth;
+      let chartWidth;
+      let chartHeight;
+
+      if (width < 768) { // Mobile
+        chartWidth = width - 40; // Account for padding
+        chartHeight = 250;
+      } else if (width < 1024) { // Tablet
+        chartWidth = width - 80;
+        chartHeight = 300;
+      } else { // Desktop
+        chartWidth = (width - 300) / 2; // Account for sidebar and gap
+        chartHeight = 300;
+      }
+
+      setDimensions({
+        width: Math.min(chartWidth, 600), // Max width of 600px
+        height: chartHeight
+      });
     };
-  };
 
-  const dims = getChartDimensions();
+    updateDimensions(); // Initial call
+    window.addEventListener('resize', updateDimensions);
+    
+    return () => window.removeEventListener('resize', updateDimensions);
+  }, []);
 
   return (
-    <div className="w-full lg:w-[calc(100%-250px)] min-h-screen bg-gray-50 p-[1rem] lg:ml-[250px]">
-      {/* Hero Section */}
-      <div className="w-full py-8 md:py-16 lg:py-24 px-4 bg-gradient-to-r from-indigo-600 to-blue-700">
-        <div className="w-full py-12 md:py-24 text-black text-center">
-          <h1 className="text-3xl md:text-5xl font-bold leading-tight">
-            Welcome to Our Manpower Company
-          </h1>
-          <p className="mt-6 text-xl text-gray-100">
-            Your trusted partner for skilled manpower solutions.
-          </p>
-          <button className="mt-8 px-8 py-4 bg-white text-indigo-600 rounded-lg shadow-lg font-semibold hover:bg-gray-100 transition duration-300 transform hover:scale-105">
-            Get Started
-          </button>
+    <div className="p-4 md:p-6 w-full min-h-screen bg-gray-50">
+      {/* Stats Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        <div className="bg-white p-4 rounded-lg shadow">
+          <div className="flex justify-between items-center">
+            <div>
+              <p className="text-gray-500 text-sm">Total Employees</p>
+              <h3 className="text-2xl font-bold">1,070</h3>
+              <p className="text-green-500 text-sm">↑ 1.77% from last period</p>
+            </div>
+            <div className="text-purple-600">
+              {/* Add your users icon here */}
+              👥
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-white p-4 rounded-lg shadow">
+          <div className="flex justify-between items-center">
+            <div>
+              <p className="text-gray-500 text-sm">Active Placements</p>
+              <h3 className="text-2xl font-bold">540</h3>
+            </div>
+            <div className="text-purple-600">
+              {/* Add your briefcase icon here */}
+              💼
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-white p-4 rounded-lg shadow">
+          <div className="flex justify-between items-center">
+            <div>
+              <p className="text-gray-500 text-sm">Partner Hospitals</p>
+              <h3 className="text-2xl font-bold">140</h3>
+              <p className="text-green-500 text-sm">↑ 48.35% from last period</p>
+            </div>
+            <div className="text-purple-600">
+              {/* Add your hospital icon here */}
+              🏥
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-white p-4 rounded-lg shadow">
+          <div className="flex justify-between items-center">
+            <div>
+              <p className="text-gray-500 text-sm">Average Placement Rate</p>
+              <h3 className="text-2xl font-bold">76%</h3>
+              <p className="text-green-500 text-sm">↑ 7.03% from last period</p>
+            </div>
+            <div className="text-purple-600">
+              {/* Add your trending up icon here */}
+              📈
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* Statistics Section */}
-      <div className="py-8 md:py-12 w-full mx-auto px-4">
-        <h2 className="text-3xl md:text-4xl font-bold text-center mb-8 md:mb-12 text-gray-800">
-          Employee Statistics
-        </h2>
-
-        <div className="grid grid-cols-1 gap-6">
-          {/* Hospital Employment Chart */}
-          <div className="p-4 md:p-8 bg-white rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 overflow-x-auto">
-            <h3 className="text-xl md:text-2xl font-bold mb-6 text-gray-800">
-              Hospital-wise Employment
-            </h3>
-            <div className="flex justify-center">
-              <BarChart width={dims.full} height={dims.height} data={employeeData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
-                <XAxis dataKey="name" stroke="#6B7280" />
-                <YAxis stroke="#6B7280" />
-                <Tooltip />
-                <Legend />
-                <Bar dataKey="employees" fill={theme.secondary} />
-              </BarChart>
-            </div>
-          </div>
-
-          {/* Employee Status Chart */}
-          <div className="p-4 md:p-8 bg-white rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 overflow-x-auto">
-            <h3 className="text-xl md:text-2xl font-bold mb-6 text-gray-800">
-              Employee Status Distribution
-            </h3>
-            <div className="flex justify-center">
-              <PieChart width={dims.full} height={dims.height}>
-                <Pie
-                  data={statusData}
-                  cx="50%"
-                  cy="50%"
-                  labelLine={false}
-                  label={({ name, percent }) =>
-                    `${name} ${(percent * 100).toFixed(0)}%`
-                  }
-                  outerRadius={100}
-                  fill="#8884d8"
-                  dataKey="value"
-                >
-                  {statusData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.color} />
-                  ))}
-                </Pie>
-                <Tooltip />
-                <Legend />
-              </PieChart>
-            </div>
+      {/* Charts */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Hospital-wise Employment */}
+        <div className="bg-white p-4 rounded-lg shadow w-full">
+          <h3 className="text-lg font-semibold mb-4">Hospital-wise Employment</h3>
+          <div className="w-full overflow-x-auto">
+            <BarChart
+              width={dimensions.width}
+              height={dimensions.height}
+              data={hospitalData}
+              margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
+            >
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="name" />
+              <YAxis />
+              <Tooltip />
+              <Bar dataKey="employees" fill="#9333EA" />
+            </BarChart>
           </div>
         </div>
 
-        {/* Active Employees Charts */}
-        <div className="w-full mt-8">
-          <h2 className="text-2xl md:text-3xl font-bold text-center mb-6 md:mb-8 text-gray-800">
-            Active Employees Analysis
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {/* Bar Chart */}
-            <div className="p-4 bg-white rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 overflow-x-auto">
-              <h3 className="text-lg md:text-xl font-bold mb-4 text-gray-800">
-                Active Employees
-              </h3>
-              <div className="flex justify-center">
-                <BarChart width={dims.small} height={dims.height} data={activeEmployeesData}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
-                  <XAxis dataKey="month" stroke="#6B7280" />
-                  <YAxis stroke="#6B7280" />
-                  <Tooltip />
-                  <Bar dataKey="count" fill="#10B981" />
-                </BarChart>
-              </div>
-            </div>
+        {/* Employee Status Distribution */}
+        <div className="bg-white p-4 rounded-lg shadow w-full">
+          <h3 className="text-lg font-semibold mb-4">Employee Status Distribution</h3>
+          <div className="w-full overflow-x-auto">
+            <PieChart
+              width={dimensions.width}
+              height={dimensions.height}
+              margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
+            >
+              <Pie
+                data={employeeStatusData}
+                cx="50%"
+                cy="50%"
+                labelLine={false}
+                label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                outerRadius={Math.min(dimensions.width, dimensions.height) / 3}
+                fill="#8884d8"
+                dataKey="value"
+              >
+                {employeeStatusData.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={entry.color} />
+                ))}
+              </Pie>
+              <Tooltip />
+              <Legend />
+            </PieChart>
+          </div>
+        </div>
 
-            {/* Line Chart */}
-            <div className="p-4 bg-white rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 overflow-x-auto">
-              <h3 className="text-lg md:text-xl font-bold mb-4 text-gray-800">
-                Inactive Employees
-              </h3>
-              <div className="flex justify-center">
-                <LineChart width={dims.small} height={dims.height} data={inactiveEmployeesData}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
-                  <XAxis dataKey="month" stroke="#6B7280" />
-                  <YAxis stroke="#6B7280" />
-                  <Tooltip />
-                  <Line
-                    type="monotone"
-                    dataKey="count"
-                    stroke="#EF4444"
-                    strokeWidth={2}
-                  />
-                </LineChart>
-              </div>
-            </div>
+        {/* Monthly Recruitment Trends */}
+        <div className="bg-white p-4 rounded-lg shadow w-full">
+          <h3 className="text-lg font-semibold mb-4">Monthly Recruitment Trends</h3>
+          <div className="w-full overflow-x-auto">
+            <LineChart
+              width={dimensions.width}
+              height={dimensions.height}
+              data={activeEmployeesData}
+              margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
+            >
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="month" />
+              <YAxis />
+              <Tooltip />
+              <Line type="monotone" dataKey="count" stroke="#9333EA" strokeWidth={2} />
+            </LineChart>
+          </div>
+        </div>
 
-            {/* Area Chart */}
-            <div className="p-4 bg-white rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 overflow-x-auto">
-              <h3 className="text-lg md:text-xl font-bold mb-4 text-gray-800">
-                Interested Employees
-              </h3>
-              <div className="flex justify-center">
-                <AreaChart width={dims.small} height={dims.height} data={inactiveEmployeesData}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
-                  <XAxis dataKey="month" stroke="#6B7280" />
-                  <YAxis stroke="#6B7280" />
-                  <Tooltip />
-                  <Area
-                    type="monotone"
-                    dataKey="count"
-                    fill="#EF4444"
-                    fillOpacity={0.3}
-                    stroke="#EF4444"
-                  />
-                </AreaChart>
-              </div>
-            </div>
+        {/* Placement Success Rate */}
+        <div className="bg-white p-4 rounded-lg shadow w-full">
+          <h3 className="text-lg font-semibold mb-4">Placement Success Rate</h3>
+          <div className="w-full overflow-x-auto">
+            <AreaChart
+              width={dimensions.width}
+              height={dimensions.height}
+              data={inactiveEmployeesData}
+              margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
+            >
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="month" />
+              <YAxis />
+              <Tooltip />
+              <Area
+                type="monotone"
+                dataKey="count"
+                fill="#7C3AED"
+                fillOpacity={0.3}
+                stroke="#7C3AED"
+              />
+            </AreaChart>
           </div>
         </div>
       </div>

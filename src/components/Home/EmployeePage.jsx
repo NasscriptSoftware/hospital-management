@@ -103,41 +103,79 @@ const EmployeePage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-8">
-      <div className=" mx-auto">
-        <div className="bg-white rounded-2xl shadow-2xl overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-purple-100 p-2 md:p-8">
+      <div className="mx-auto">
+        <div className="bg-white rounded-lg md:rounded-2xl shadow-xl overflow-hidden">
           {/* Header Section */}
-          <div className="bg-gradient-to-r from-blue-600 to-indigo-700 text-white p-6">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <Users size={32} className="text-white" />
-                <h1 className="text-3xl font-bold">Employee Management</h1>
+          <div className="bg-gradient-to-r from-purple-600 to-purple-700 text-white p-3 md:p-6">
+            <div className="flex flex-col md:flex-row items-center justify-between gap-3 md:gap-4">
+              <div className="flex items-center gap-3 md:gap-4">
+                <Users size={28} className="text-white" />
+                <h1 className="text-xl md:text-3xl font-bold">Employee Management</h1>
               </div>
               <button 
                 onClick={() => setIsModalOpen(true)}
-                className="flex items-center gap-2 bg-white text-blue-700 px-4 py-2 rounded-lg hover:bg-blue-50 transition-all"
+                className="w-full md:w-auto flex items-center justify-center gap-2 bg-white text-purple-700 px-4 py-2 rounded-lg hover:bg-purple-50 transition-all text-sm md:text-base"
               >
-                <UserPlus size={20} />
+                <UserPlus size={18} />
                 Add Employee
               </button>
             </div>
           </div>
 
           {/* Search and Filter Section */}
-          <div className="p-6 bg-gray-50 border-b">
-            <div className="flex flex-wrap gap-4 items-center">
-              <div className="flex-grow ">
-                <Search className=" left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+          <div className="p-3 md:p-6 bg-gray-50 border-b">
+            {/* Mobile View */}
+            <div className="block md:hidden space-y-3">
+              <div className="relative w-full">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
                 <input
                   type="text"
-                  placeholder="Search employees by name, email, or position..."
-                  className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-blue-500"
+                  placeholder="Search employees..."
+                  className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-purple-500 text-sm"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
               </div>
+              
+              <div className="flex gap-2">
+                <select
+                  className="flex-1 px-3 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-purple-500 text-sm"
+                  value={filterContract}
+                  onChange={(e) => setFilterContract(e.target.value)}
+                >
+                  <option value="">All Contracts</option>
+                  <option value="Full-time">Full-time</option>
+                  <option value="6 Months">6 Months</option>
+                  <option value="3 Months">3 Months</option>
+                </select>
+                <select
+                  className="flex-1 px-3 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-purple-500 text-sm"
+                  value={filterDepartment}
+                  onChange={(e) => setFilterDepartment(e.target.value)}
+                >
+                  <option value="">All Departments</option>
+                  <option value="Engineering">Engineering</option>
+                  <option value="Management">Management</option>
+                  <option value="Design">Design</option>
+                  <option value="Analytics">Analytics</option>
+                  <option value="IT">IT</option>
+                </select>
+                {(searchTerm || filterContract || filterDepartment) && (
+                  <button 
+                    onClick={resetFilters}
+                    className="text-red-500 hover:bg-red-50 p-2 rounded-full"
+                  >
+                    <X size={18} />
+                  </button>
+                )}
+              </div>
+            </div>
+
+            {/* Desktop View */}
+            <div className="hidden md:flex items-center gap-4">
               <select
-                className="px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-blue-500"
+                className="w-48 px-3 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-purple-500 text-base"
                 value={filterContract}
                 onChange={(e) => setFilterContract(e.target.value)}
               >
@@ -146,8 +184,9 @@ const EmployeePage = () => {
                 <option value="6 Months">6 Months</option>
                 <option value="3 Months">3 Months</option>
               </select>
+              
               <select
-                className="px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-blue-500"
+                className="w-48 px-3 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-purple-500 text-base"
                 value={filterDepartment}
                 onChange={(e) => setFilterDepartment(e.target.value)}
               >
@@ -158,56 +197,67 @@ const EmployeePage = () => {
                 <option value="Analytics">Analytics</option>
                 <option value="IT">IT</option>
               </select>
+
+              <div className="relative flex-grow">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
+                <input
+                  type="text"
+                  placeholder="Search employees..."
+                  className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-purple-500 text-sm md:text-base"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+              </div>
               {(searchTerm || filterContract || filterDepartment) && (
                 <button 
                   onClick={resetFilters}
-                  className="text-red-500 hover:bg-red-50 p-2 rounded-full"
+                  className="self-center text-red-500 hover:bg-red-50 p-2 rounded-full"
                 >
-                  <X size={20} />
+                  <X size={18} />
                 </button>
               )}
             </div>
           </div>
 
           {/* Employee List */}
-          <div className="p-6">
+          <div className="p-3 md:p-6">
             {filteredEmployees.length === 0 ? (
-              <div className="text-center py-10 text-gray-500">
+              <div className="text-center py-8 text-gray-500 text-sm md:text-base">
                 No employees found
               </div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6">
                 {filteredEmployees.map((employee) => (
                   <div
                     key={employee.id}
-                    className="bg-white shadow-lg rounded-2xl p-6 hover:shadow-xl transition-all"
+                    className="bg-white shadow-lg rounded-xl md:rounded-2xl p-4 hover:shadow-xl transition-all"
                   >
-                    <div className="flex justify-between items-center mb-4">
-                      <div className="flex items-center space-x-4">
-                        <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 font-bold">
+                    <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 gap-3">
+                      <div className="flex items-center space-x-3">
+                        <div className="w-10 h-10 md:w-12 md:h-12 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 font-bold text-sm md:text-base">
                           {employee.name.charAt(0)}
                         </div>
                         <div>
-                          <h3 className="text-lg font-semibold">{employee.name}</h3>
-                          <p className="text-gray-500 text-sm">{employee.email}</p>
+                          <h3 className="text-base md:text-lg font-semibold">{employee.name}</h3>
+                          <p className="text-gray-500 text-xs md:text-sm break-all">{employee.email}</p>
                         </div>
                       </div>
-                      <div className="flex space-x-2">
+                      <div className="flex space-x-2 self-end md:self-auto">
                         <button 
                           onClick={() => handleEdit(employee)}
-                          className="text-blue-500 hover:bg-blue-50 p-2 rounded-full"
+                          className="text-purple-500 hover:bg-purple-50 p-1.5 md:p-2 rounded-full"
                         >
-                          <Edit2 size={18} />
+                          <Edit2 size={16} />
                         </button>
                         <button 
                           onClick={() => handleDelete(employee.id)}
-                          className="text-red-500 hover:bg-red-50 p-2 rounded-full"
+                          className="text-red-500 hover:bg-red-50 p-1.5 md:p-2 rounded-full"
                         >
-                          <Trash2 size={18} />
+                          <Trash2 size={16} />
                         </button>
                       </div>
                     </div>
-                    <div className="space-y-2">
+                    <div className="space-y-2 text-sm md:text-base">
                       <div className="flex justify-between">
                         <span className="text-gray-600">Position:</span>
                         <span className="font-medium">{employee.position}</span>
@@ -218,7 +268,7 @@ const EmployeePage = () => {
                       </div>
                       <div className="flex justify-between">
                         <span className="text-gray-600">Contract:</span>
-                        <span className="font-medium text-green-600">{employee.contract}</span>
+                        <span className="font-medium text-purple-600">{employee.contract}</span>
                       </div>
                     </div>
                   </div>
@@ -231,53 +281,53 @@ const EmployeePage = () => {
 
       {/* Modal */}
       {isModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-8">
-            <h2 className="text-2xl font-bold mb-6 text-center">
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-3 md:p-4">
+          <div className="bg-white rounded-xl md:rounded-2xl shadow-2xl w-full max-w-md p-4 md:p-8 max-h-[90vh] overflow-y-auto">
+            <h2 className="text-xl md:text-2xl font-bold mb-4 md:mb-6 text-center">
               {isEditMode ? 'Edit Employee' : 'Add New Employee'}
             </h2>
             <form onSubmit={handleSubmit}>
               <div className="space-y-4">
                 <div>
-                  <label className="block text-gray-700 mb-2">Name</label>
+                  <label className="block text-gray-700 mb-2 text-sm md:text-base">Name</label>
                   <input
                     type="text"
                     name="name"
                     value={isEditMode ? selectedEmployee.name : newEmployee.name}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm md:text-base"
                     required
                   />
                 </div>
                 <div>
-                  <label className="block text-gray-700 mb-2">Email</label>
+                  <label className="block text-gray-700 mb-2 text-sm md:text-base">Email</label>
                   <input
                     type="email"
                     name="email"
                     value={isEditMode ? selectedEmployee.email : newEmployee.email}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm md:text-base"
                     required
                   />
                 </div>
                 <div>
-                  <label className="block text-gray-700 mb-2">Position</label>
+                  <label className="block text-gray-700 mb-2 text-sm md:text-base">Position</label>
                   <input
                     type="text"
                     name="position"
                     value={isEditMode ? selectedEmployee.position : newEmployee.position}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm md:text-base"
                     required
                   />
                 </div>
                 <div>
-                  <label className="block text-gray-700 mb-2">Department</label>
+                  <label className="block text-gray-700 mb-2 text-sm md:text-base">Department</label>
                   <select
                     name="department"
                     value={isEditMode ? selectedEmployee.department : newEmployee.department}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm md:text-base"
                     required
                   >
                     <option value="">Select Department</option>
@@ -289,12 +339,12 @@ const EmployeePage = () => {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-gray-700 mb-2">Contract</label>
+                  <label className="block text-gray-700 mb-2 text-sm md:text-base">Contract</label>
                   <select
                     name="contract"
                     value={isEditMode ? selectedEmployee.contract : newEmployee.contract}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm md:text-base"
                     required
                   >
                     <option value="">Select Contract Type</option>
@@ -304,17 +354,17 @@ const EmployeePage = () => {
                   </select>
                 </div>
               </div>
-              <div className="flex justify-end space-x-4 mt-6">
+              <div className="flex flex-col md:flex-row justify-end space-y-2 md:space-y-0 md:space-x-4 mt-6">
                 <button
                   type="button"
                   onClick={handleCloseModal}
-                  className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300"
+                  className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 w-full md:w-auto text-sm md:text-base"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                  className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 w-full md:w-auto text-sm md:text-base"
                 >
                   {isEditMode ? 'Update Employee' : 'Add Employee'}
                 </button>

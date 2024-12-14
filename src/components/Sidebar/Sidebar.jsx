@@ -1,59 +1,91 @@
 import { Link } from 'react-router-dom';
-import { Home, Users, Building2, ChevronLeft, ChevronRight, LogOut } from 'lucide-react';
+import { 
+  Home, 
+  // LayoutDashboard, 
+  Building2,
+  Users,
+  Bell, 
+  LogOut,
+  ChevronRight,
+  ChevronLeft
+} from 'lucide-react';
 import { useState } from 'react';
 
 const Sidebar = () => {
-  const [isExpanded, setIsExpanded] = useState(true);
+  const [isExpanded, setIsExpanded] = useState(false);
 
   const menuItems = [
     { title: 'Home', path: '/', icon: <Home size={20} /> },
-    { title: 'Employee', path: '/employee', icon: <Users size={20} /> },
+    // { title: 'Dashboard', path: '/dashboard', icon: <LayoutDashboard size={20} /> },
     { title: 'Hospital', path: '/hospital', icon: <Building2 size={20} /> },
+    { title: 'Employee', path: '/employee', icon: <Users size={20} /> },
   ];
 
   return (
-    <div className={`h-full bg-gray-800 text-white transition-all duration-300 ${isExpanded ? 'w-64' : 'w-16'} flex flex-col`}>
-      <div className="p-6 relative flex-1">
-        <button
-          onClick={() => setIsExpanded(!isExpanded)}
-          className="absolute -right-3 top-9 bg-gray-800 p-1 rounded-full border border-gray-700"
-        >
-          {isExpanded ? <ChevronLeft size={20} /> : <ChevronRight size={20} />}
-        </button>
+    <div className={`relative min-h-screen bg-white shadow-lg transition-all duration-300 z-10 ${isExpanded ? 'w-64' : 'w-16'}`}>
+      {/* Toggle Button - Positioned absolutely */}
+      <button
+        onClick={() => setIsExpanded(!isExpanded)}
+        className="absolute -right-3 top-8 bg-purple-600 text-white rounded-full p-1.5 hover:bg-purple-700 transition-colors"
+      >
+        {isExpanded ? <ChevronLeft size={16} /> : <ChevronRight size={16} />}
+      </button>
 
-        {isExpanded && (
-          <h2 className="text-2xl font-bold mb-8 text-center text-blue-400">ManPower Management</h2>
-        )}
-
-        <nav>
-          <ul className="space-y-3 mt-16">
-            {menuItems.map((item, index) => (
-              <li key={index}>
-                <Link
-                  to={item.path}
-                  className={`flex items-center mt-5 px-2 py-3 rounded-lg hover:bg-gray-700 transition-all duration-200 hover:translate-x-1 hover:shadow-md ${
-                    isExpanded ? 'gap-3' : 'justify-center'
-                  }`}
-                >
-                  <span className="text-blue-400">{item.icon}</span>
-                  {isExpanded && <span>{item.title}</span>}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
+      {/* Logo or Brand */}
+      <div className="p-4 border-b border-gray-100  ">
+        <div className={`flex items-center ${!isExpanded && 'justify-center'}`}>
+          {/* Add your logo here */}
+          <div className="w-8 h-8 bg-purple-600 rounded-lg flex items-center justify-center text-white font-bold">
+            M
+          </div>
+          {isExpanded && <span className="ml-3 font-semibold text-gray-700">ManPower Management </span>}
+        </div>
       </div>
 
-      {/* Logout Button */}
-      <div className="p-6">
+      {/* Navigation Menu */}
+      <nav className="mt-4 p-2">
+        <ul className="space-y-1">
+          {menuItems.map((item, index) => (
+            <li key={index}>
+              <Link
+                to={item.path}
+                className={`flex items-center rounded-lg hover:bg-purple-50 hover:text-purple-600 transition-colors
+                  ${item.path === window.location.pathname ? 'bg-purple-50 text-purple-600' : 'text-gray-600'}
+                  ${isExpanded ? 'px-4 py-2.5 gap-3' : 'p-2.5 justify-center'}`}
+              >
+                <span className="flex-shrink-0">{item.icon}</span>
+                {isExpanded && <span className="font-medium">{item.title}</span>}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </nav>
+
+      {/* Bottom Actions */}
+      <div className="absolute bottom-0 w-full p-2 border-t border-gray-100">
+        <Link
+          to="/notifications"
+          className={`flex items-center rounded-lg text-gray-600 hover:bg-purple-50 hover:text-purple-600 transition-colors
+            ${isExpanded ? 'px-4 py-2.5 gap-3' : 'p-2.5 justify-center'}`}
+        >
+          <span className="relative">
+            <Bell size={20} />
+            <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-4 h-4 flex items-center justify-center rounded-full">
+              7
+            </span>
+          </span>
+          {isExpanded && (
+            <span className="font-medium">Notifications</span>
+          )}
+        </Link>
+        
         <button
           onClick={() => {/* Add your logout logic here */}}
-          className={`flex items-center px-2 py-3 rounded-lg hover:bg-gray-700 transition-all duration-200 hover:translate-x-1 hover:shadow-md w-full ${
-            isExpanded ? 'gap-3' : 'justify-center'
-          }`}
+          className={`w-full flex items-center rounded-lg text-gray-600 hover:bg-purple-50 hover:text-purple-600 transition-colors mt-1
+            ${isExpanded ? 'px-4 py-2.5 gap-3' : 'p-2.5 justify-center'}`}
         >
-          <span className="text-red-400"><LogOut size={20} /></span>
-          {isExpanded && <span>Logout</span>}
+          <LogOut size={20} />
+          {isExpanded && <span className="font-medium">Logout</span>}
         </button>
       </div>
     </div>
